@@ -3,7 +3,8 @@ import { getColorByViews, maskEmail } from "@/utils";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import { Button, Col, Row, Select, Table, Tooltip, Typography } from "antd";
 import { ColumnsType } from "antd/es/table";
-import moment from "moment";
+import dayjs from "dayjs";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -12,7 +13,14 @@ const columns: ColumnsType<Joke> = [
     title: "Title",
     dataIndex: "Title",
     key: "title",
-    render: (text) => <a>{text}</a>,
+    render: (text, record) => (
+      <Link
+        href={`/jokes/${record.id}`}
+        style={{ textDecoration: "underline" }}
+      >
+        {text}
+      </Link>
+    ),
   },
   {
     title: "Author",
@@ -24,7 +32,7 @@ const columns: ColumnsType<Joke> = [
     title: "Created Date",
     dataIndex: "CreatedAt",
     key: "CreateAt",
-    render: (value) => moment(value).format("D MMM YYYY"),
+    render: (value) => dayjs(value).format("D MMM YYYY"),
   },
   {
     title: "Views",

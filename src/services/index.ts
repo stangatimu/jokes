@@ -8,7 +8,45 @@ export const APIService = createApi({
     getJokes: builder.query<Joke[], { page?: number; limit?: number }>({
       query: ({ page = 1, limit = 10 }) => `/?_page=${page}&_limit=${limit}`,
     }),
+    getJoke: builder.query<Joke, { joke: string }>({
+      query: ({ joke }) => `/${joke}`,
+    }),
+    deleteJoke: builder.mutation<{}, { joke: number }>({
+      query({ joke }) {
+        return {
+          url: `/${joke}`,
+          method: "DELETE",
+        };
+      },
+    }),
+    updateJoke: builder.mutation<Joke, { joke: Partial<Joke> }>({
+      query({ joke }) {
+        const { id, ...body } = joke;
+        return {
+          url: `/${id}`,
+          method: "PATCH",
+          body,
+        };
+      },
+    }),
+    createJoke: builder.mutation<Joke, { joke: Partial<Joke> }>({
+      query({ joke }) {
+        const { id, ...body } = joke;
+        return {
+          url: "/",
+          method: "POST",
+          body,
+        };
+      },
+    }),
   }),
 });
 
-export const { useGetJokesQuery } = APIService;
+export const {
+  useGetJokesQuery,
+  useGetJokeQuery,
+  useCreateJokeMutation,
+  useDeleteJokeMutation,
+  useUpdateJokeMutation,
+  endpoints,
+} = APIService;
