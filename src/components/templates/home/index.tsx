@@ -1,6 +1,6 @@
 import { Joke } from "@/types/jokes";
 import { getColorByViews, maskEmail } from "@/utils";
-import { CaretLeft, CaretRight } from "@phosphor-icons/react";
+import { CaretLeft, CaretRight, Plus } from "@phosphor-icons/react";
 import { Button, Col, Row, Select, Table, Tooltip, Typography } from "antd";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
@@ -71,9 +71,19 @@ const JokesList: React.FC<JokesListProps> = (props) => {
   return (
     <Row justify={"center"} style={{ marginTop: "5em" }}>
       <Col lg={14} md={18} sm={22} xs={23}>
-        <Typography.Title level={1} style={{ textAlign: "center" }}>
-          Jokes
-        </Typography.Title>
+        <Row justify={"space-between"} align="middle">
+          <Typography.Title level={1} style={{ textAlign: "center" }}>
+            Jokes
+          </Typography.Title>
+          <Link href={"/jokes/create"}>
+            <Button
+              icon={<Plus size={15} style={{ marginBottom: "-2" }} />}
+              type="primary"
+            >
+              New
+            </Button>
+          </Link>
+        </Row>
         <Table
           columns={columns}
           dataSource={jokes}

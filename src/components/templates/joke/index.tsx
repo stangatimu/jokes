@@ -9,14 +9,12 @@ import {
   Button,
   Popconfirm,
   Space,
-  notification,
   message,
 } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import Link from "next/link";
 import { useDeleteJokeMutation, useUpdateJokeMutation } from "@/services";
 import { useRouter } from "next/router";
-import { Joke } from "@/types/jokes";
 
 interface JokeDetailProps {
   joke?: {

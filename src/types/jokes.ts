@@ -1,11 +1,14 @@
-export type Joke = {
-  id: number;
+export type NewJoke = {
   Body: string;
   Title: string;
   Views: number;
   Author: string;
-  CreatedAt: number;
 };
+
+export interface Joke extends NewJoke {
+  id: number;
+  CreatedAt: number;
+}
 
 export enum ViewsColors {
   Tomato = "tomato",

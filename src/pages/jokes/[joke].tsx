@@ -1,8 +1,6 @@
 import Head from "next/head";
-import JokesList from "@ui/templates/home";
 import { useGetJokeQuery } from "@/services";
 import { useRouter } from "next/router";
-import { parseParam } from "@/utils";
 import JokeDetail from "@/components/templates/joke";
 
 export default function Joke() {
