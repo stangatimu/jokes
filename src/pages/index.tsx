@@ -3,16 +3,28 @@ import JokesList from "@ui/templates/home";
 import { useGetJokesQuery } from "@/services";
 import { useRouter } from "next/router";
 import { parseParam } from "@/utils";
-
-
+import { IQuery } from "@/types/jokes";
+import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
-  const { page, perPage } = router.query;
-  const { isLoading, data } = useGetJokesQuery({
+  const { page, perPage, sort, order } = router.query as unknown as IQuery;
+  const { isLoading, data, refetch } = useGetJokesQuery({
     limit: parseParam(perPage),
     page: parseParam(page),
+    sort,
+    order,
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await refetch();
+    };
+
+    fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, perPage, sort, order]);
+
   return (
     <>
       <Head>

@@ -1,7 +1,7 @@
 import { ViewsColors } from "@/types/jokes";
 
 export function maskEmail(email: string): string {
-  return email.replace(/(@)([^\.\s]*)(\.[^\.\s]+)+/, function (_, a, b, c) {
+  return email?.replace(/(@)([^\.\s]*)(\.[^\.\s]+)+/, function (_, a, b, c) {
     return a + "*".repeat(b.length) + c;
   });
 }
@@ -25,4 +25,20 @@ export const getColorByViews = (views: number): ViewsColors | undefined => {
   } else {
     return;
   }
+};
+
+export const generateQueryString = (params: { [key: string]: any }): string => {
+  const queryString = Object.entries(params)
+    .filter(([_, value]) => value !== undefined)
+    .map(([key, value]) => {
+      if (Array.isArray(value)) {
+        return value
+          .map((v) => `${encodeURIComponent(key)}=${encodeURIComponent(v)}`)
+          .join("&");
+      }
+      return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+    })
+    .join("&");
+
+  return queryString;
 };

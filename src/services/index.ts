@@ -1,12 +1,18 @@
-import { Joke } from "@/types/jokes";
+import { Joke, SortFields, SortOrder } from "@/types/jokes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const APIService = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_URL }),
   endpoints: (builder) => ({
-    getJokes: builder.query<Joke[], { page?: number; limit?: number }>({
-      query: ({ page = 1, limit = 10 }) => `/?_page=${page}&_limit=${limit}`,
+    getJokes: builder.query<
+      Joke[],
+      { page?: number; limit?: number; sort?: SortFields; order?: SortOrder }
+    >({
+      query: ({ page = 1, limit = 10, sort, order }) =>
+        `/?_page=${page}&_limit=${limit}${sort ? `&_sort=${sort}` : ""}${
+          order ? `&_order=${order}` : ""
+        }`,
     }),
     getJoke: builder.query<Joke, { joke: string }>({
       query: ({ joke }) => `/${joke}`,

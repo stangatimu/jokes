@@ -1,8 +1,9 @@
-import { Joke } from "@/types/jokes";
-import { getColorByViews, maskEmail } from "@/utils";
+import { Joke, SortOrder } from "@/types/jokes";
+import { generateQueryString, getColorByViews, maskEmail } from "@/utils";
 import { CaretLeft, CaretRight, Plus } from "@phosphor-icons/react";
 import { Button, Col, Row, Select, Table, Tooltip, Typography } from "antd";
-import { ColumnsType } from "antd/es/table";
+import { ColumnsType, TablePaginationConfig } from "antd/es/table";
+import { FilterValue, SorterResult } from "antd/es/table/interface";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -33,12 +34,14 @@ const columns: ColumnsType<Joke> = [
     dataIndex: "CreatedAt",
     key: "CreateAt",
     render: (value) => dayjs(value).format("D MMM YYYY"),
+    sorter: true,
   },
   {
     title: "Views",
     dataIndex: "Views",
     key: "Views",
     render: (num) => <span style={{ color: getColorByViews(num) }}>{num}</span>,
+    sorter: true,
   },
 ];
 
@@ -54,7 +57,9 @@ const JokesList: React.FC<JokesListProps> = (props) => {
   let page = (router.query.page as string) || 1;
   let perPage = (router.query.perPage as string) || 10;
   const handleChange = (value: number) => {
-    router.push(`/?perPage=${value}&page=${page}`);
+    let params = { ...router.query, page, perPage: value };
+
+    router.push(`/?${generateQueryString(params)}`);
   };
 
   const handlePageChange = (isNext: boolean) => {
@@ -66,8 +71,32 @@ const JokesList: React.FC<JokesListProps> = (props) => {
       _page -= 1;
     }
 
-    router.push(`/?perPage=${perPage}&page=${_page}`);
+    let params = { ...router.query, page: _page };
+
+    router.push(`/?${generateQueryString(params)}`);
   };
+
+  const sortOrderMap = {
+    ascend: SortOrder.ASC,
+    descend: SortOrder.DESC,
+  };
+
+  const handleTableChange = (
+    pagination: TablePaginationConfig,
+    filters: Record<string, FilterValue | null>,
+    sorter: SorterResult<Joke> | SorterResult<Joke>[]
+  ) => {
+    const { field, order } = sorter as SorterResult<Joke>;
+
+    let params = {
+      ...router.query,
+      sort: field,
+      order: order && sortOrderMap[order],
+    };
+
+    router.push(`/?${generateQueryString(params)}`);
+  };
+
   return (
     <Row justify={"center"} style={{ marginTop: "5em" }}>
       <Col lg={14} md={18} sm={22} xs={23}>
@@ -89,6 +118,7 @@ const JokesList: React.FC<JokesListProps> = (props) => {
           dataSource={jokes}
           loading={loading}
           pagination={false}
+          onChange={handleTableChange}
         />
       </Col>
       <Col lg={14} md={18} sm={22} xs={23}>
