@@ -144,7 +144,7 @@ const JokesList: React.FC<JokesListProps> = (props) => {
             <Tooltip title="Next">
               <Button
                 onClick={() => handlePageChange(true)}
-                disabled={!!jokes?.length && jokes?.length < perPage}
+                disabled={!!jokes?.length && jokes?.length < +perPage}
               >
                 <CaretRight size={20} />
               </Button>
